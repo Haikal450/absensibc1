@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Absensi XI BC 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F7F4EE;
+    --ink:#1F2733;
+    --navy:#27344B;
+    --coral:#E8633E;
+    --coral-soft:#FBE2D8;
+    --line:#D9D2C5;
+    --ok:#3F7A5C;
+    --ok-soft:#E3EFE7;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Space Grotesk', sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+
+  /* ===== Card shell ===== */
+  .app{
+    width:100%;
+    max-width:440px;
+    background:#fff;
+    border:1.5px solid var(--line);
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 2px 0 var(--line);
+  }
+  .app-header{
+    background:var(--navy);
+    color:var(--paper);
+    padding:22px 24px 18px;
+    position:relative;
+  }
+  .app-header .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--coral);
+    margin-bottom:6px;
+  }
+  .app-header h1{
+    font-size:22px;
+    font-weight:700;
+    letter-spacing:-0.01em;
+  }
+  .app-header .sub{
+    font-size:13px;
+    opacity:.65;
+    margin-top:4px;
+  }
+  .stripe{
+    height:6px;
+    background:repeating-linear-gradient(135deg, var(--coral) 0 10px, transparent 10px 20px);
+    opacity:.85;
+  }
+
+  .body{ padding:24px; }
+  .hidden{ display:none !important; }
+
+  /* ===== Form fields ===== */
+  label{
+    display:block;
+    font-size:11px;
+    font-family:'JetBrains Mono', monospace;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:#8B8275;
+    margin-bottom:6px;
+  }
+  input{
+    width:100%;
+    padding:12px 14px;
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:15px;
+    background:var(--paper);
+    color:var(--ink);
+    margin-bottom:16px;
+    transition:border-color .15s;
+  }
+  input:focus{ outline:none; border-color:var(--coral); }
+
+  .btn{
+    width:100%;
+    padding:13px 16px;
+    border:none;
+    border-radius:10px;
+    background:var(--coral);
+    color:#fff;
+    font-weight:600;
+    font-size:15px;
+    font-family:'Space Grotesk', sans-serif;
+    cursor:pointer;
+    transition:transform .08s, opacity .15s;
+  }
+  .btn:hover{ opacity:.92; }
+  .btn:active{ transform:scale(.98); }
+  .btn.secondary{
+    background:transparent;
+    border:1.5px solid var(--line);
+    color:var(--ink);
+  }
+  .btn.ghost{
+    background:transparent;
+    color:var(--coral);
+    text-decoration:underline;
+    width:auto;
+    padding:6px 0;
+    font-size:13px;
+  }
+
+  .error-msg{
+    background:var(--coral-soft);
+    color:#9A3F23;
+    font-size:13px;
+    padding:10px 12px;
+    border-radius:8px;
+    margin-bottom:14px;
+    font-family:'JetBrains Mono', monospace;
+  }
+
+  /* ===== Student ID Card (post-login) ===== */
+  .id-card{
+    border:1.5px dashed var(--line);
+    border-radius:14px;
+    padding:18px;
+    margin-bottom:18px;
+    position:relative;
+  }
+  .id-card .tag{
+    position:absolute;
+    top:-10px; left:14px;
+    background:var(--navy);
+    color:var(--paper);
+    font-family:'JetBrains Mono', monospace;
+    font-size:10px;
+    letter-spacing:.15em;
+    padding:3px 10px;
+    border-radius:6px;
+    text-transform:uppercase;
+  }
+  .id-row{ display:flex; justify-content:space-between; align-items:baseline; margin-top:8px; }
+  .id-row .k{ font-size:11px; color:#8B8275; font-family:'JetBrains Mono', monospace; text-transform:uppercase; letter-spacing:.1em; }
+  .id-row .v{ font-size:15px; font-weight:600; text-align:right; }
+  .id-name{ font-size:19px; font-weight:700; margin-top:2px; }
+
+  /* ===== Camera / photo booth frame — signature element ===== */
+  .booth{
+    position:relative;
+    border-radius:14px;
+    overflow:hidden;
+    background:var(--navy);
+    aspect-ratio:4/3;
+    margin-bottom:16px;
+  }
+  .booth video, .booth img{
+    width:100%; height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .booth-corner{
+    position:absolute;
+    width:26px; height:26px;
+    border:3px solid var(--coral);
+  }
+  .booth-corner.tl{ top:10px; left:10px; border-right:none; border-bottom:none; border-radius:6px 0 0 0; }
+  .booth-corner.tr{ top:10px; right:10px; border-left:none; border-bottom:none; border-radius:0 6px 0 0; }
+  .booth-corner.bl{ bottom:10px; left:10px; border-right:none; border-top:none; border-radius:0 0 0 6px; }
+  .booth-corner.br{ bottom:10px; right:10px; border-left:none; border-top:none; border-radius:0 0 6px 0; }
+  .booth-label{
+    position:absolute;
+    bottom:10px; left:50%;
+    transform:translateX(-50%);
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    color:#fff;
+    background:rgba(0,0,0,.4);
+    padding:4px 10px;
+    border-radius:20px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+  }
+  .booth-placeholder{
+    width:100%; height:100%;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--paper);
+    opacity:.4;
+    font-size:13px;
+    font-family:'JetBrains Mono', monospace;
+  }
+
+  .status-banner{
+    border-radius:12px;
+    padding:16px;
+    text-align:center;
+    margin-bottom:16px;
+  }
+  .status-banner.ok{ background:var(--ok-soft); color:var(--ok); }
+  .status-banner .big{ font-size:20px; font-weight:700; margin-bottom:2px; }
+  .status-banner .small{ font-family:'JetBrains Mono', monospace; font-size:12px; opacity:.75; }
+
+  .footer-link{ text-align:center; margin-top:10px; }
+  .footer-link a{ color:#8B8275; font-size:12px; text-decoration:none; font-family:'JetBrains Mono', monospace; }
+  .footer-link a:hover{ color:var(--coral); }
+
+  .config-note{
+    font-size:11px;
+    font-family:'JetBrains Mono', monospace;
+    color:#B4ACA0;
+    text-align:center;
+    margin-top:16px;
+    line-height:1.6;
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="app-header">
+    <div class="eyebrow">Absensi Foto · Tahun Ajaran 2026/2027</div>
+    <h1>XI BC 1</h1>
+    <div class="sub">Masuk dengan NISN untuk mencatat kehadiranmu</div>
+  </div>
+  <div class="stripe"></div>
+
+  <div class="body">
+
+    <!-- ===== LOGIN VIEW ===== -->
+    <div id="view-login">
+      <div id="login-error" class="error-msg hidden"></div>
+      <label for="nisn-input">NISN</label>
+      <input id="nisn-input" type="text" inputmode="numeric" placeholder="contoh: 0108537795" maxlength="12">
+      <button class="btn" onclick="login()">Masuk</button>
+    </div>
+
+    <!-- ===== ATTENDANCE VIEW ===== -->
+    <div id="view-attend" class="hidden">
+
+      <div class="id-card">
+        <span class="tag">Kartu Siswa</span>
+        <div class="id-name" id="student-name">—</div>
+        <div class="id-row">
+          <span class="k">NISN</span>
+          <span class="v mono" id="student-nisn">—</span>
+        </div>
+        <div class="id-row">
+          <span class="k">Kelas</span>
+          <span class="v">XI BC 1</span>
+        </div>
+        <div class="id-row">
+          <span class="k">Tanggal</span>
+          <span class="v mono" id="today-date">—</span>
+        </div>
+      </div>
+
+      <div id="already-done" class="hidden">
+        <div class="status-banner ok">
+          <div class="big">✓ Absen Tercatat</div>
+          <div class="small" id="checkin-time">—</div>
+        </div>
+      </div>
+
+      <div id="capture-section">
+        <div class="booth" id="booth">
+          <div class="booth-placeholder" id="booth-placeholder">Kamera belum aktif</div>
+          <video id="video" autoplay playsinline class="hidden"></video>
+          <img id="photo-preview" class="hidden">
+          <div class="booth-corner tl"></div>
+          <div class="booth-corner tr"></div>
+          <div class="booth-corner bl"></div>
+          <div class="booth-corner br"></div>
+          <div class="booth-label" id="booth-label">Bersiap</div>
+        </div>
+
+        <button class="btn" id="btn-camera" onclick="startCamera()">Aktifkan Kamera</button>
+        <button class="btn hidden" id="btn-capture" onclick="capturePhoto()">📸 Ambil Foto & Absen</button>
+        <button class="btn secondary hidden" id="btn-retake" onclick="retakePhoto()" style="margin-top:10px;">Ambil Ulang</button>
+      </div>
+
+      <canvas id="canvas" class="hidden"></canvas>
+
+      <div class="footer-link">
+        <a href="#" onclick="logout()">Keluar / Ganti Akun</a>
+      </div>
+    </div>
+
+    <div class="config-note">
+      Terhubung ke Supabase · isi SUPABASE_URL &amp; SUPABASE_ANON_KEY di script.js
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+</body>
+</html>
